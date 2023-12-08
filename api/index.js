@@ -12,11 +12,12 @@ mongoose.connect(process.env.MONGO_URL)
 
   const jwtSecret = process.env.JWT_SECRET;
 
+
 const app= express();
 app.use(express.json());
 app.use(cors({
     credentials: true,
-    origin: process.env.CLIENT_URL,
+    origin: "http://localhost:5173",
 }));
 
 app.get('/test',(req,res) => {
