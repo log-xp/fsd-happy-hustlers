@@ -282,6 +282,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
+bcryptjs@^2.4.3:
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/bcryptjs/-/bcryptjs-2.4.3.tgz#9ab5627b93e60621ff7cdac5da9733027df1d0cb"
+  integrity sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==
+
 binary-extensions@^2.0.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.2.0.tgz"
@@ -436,6 +441,11 @@ cors@^2.8.5:
   dependencies:
     object-assign "^4"
     vary "^1"
+
+dcryptjs@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/dcryptjs/-/dcryptjs-1.0.5.tgz#7f00edff6e9a98ea5a07f9acceffe196c6bb199b"
+  integrity sha512-KcOQ4JO9lqAnwtca8JM2HSEPHSCEHo2hK5KVOd9Hxd1RaMDK3oMExyPZUIGF0CZEPjPVMr6r72fP4TeyrRARoA==
 
 debug@2.6.9:
   version "2.6.9"
