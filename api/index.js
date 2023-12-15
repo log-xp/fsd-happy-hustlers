@@ -107,7 +107,13 @@ wss.on('connection',(connection,req) => {
 
   connection.on('message',(message,isBinary) => {
     const messageData = JSON.parse(message.toString());
-    console.log(message);
+    const {recipient , text} = messageData;
+    if (recipient && text ){
+      [...wss.clients]
+        .filter(c => c.userId === recipient)
+        .forEach(c => c.send(JSON.stringify({text,sender:connection.userId})));
+
+    }
   });
   
   // notify everyone about online people (when someone connects)

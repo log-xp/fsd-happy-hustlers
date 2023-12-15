@@ -10,6 +10,7 @@ export default function Chat(){
     const [onlinePeople, setOnlinePeople] = useState({});
     const [selectedUserId,setSelectedUserId] = useState(null);
     const [newMessageText,setNewMessageText] = useState('');
+    const [messages,setMessages] = useState([]);
     const {username,id} = useContext(UserContext)
     useEffect(() => {
         const ws = new WebSocket('ws://localhost:4040');
@@ -25,9 +26,12 @@ export default function Chat(){
     }
 
     function handleMessage(ev){
-        const messagedata = JSON.parse(ev.data);
-        if('online' in messagedata){
-            showOnlinePeople(messagedata.online);
+        const messageData = JSON.parse(ev.data);
+        console.log({ev,messageData});
+        if('online' in messageData){
+            showOnlinePeople(messageData.online);
+        } else {
+            setMessages(prev => ([...prev,{isOur:false,text:messageData.text}]));
         }
     }
 
@@ -38,6 +42,8 @@ export default function Chat(){
             text : newMessageText ,
         }));
 
+        setNewMessageText('');
+        setMessages( prev => ([...prev,{text: newMessageText, isOur:true}]));
     } 
 
     const onlinePeopleExclOurUser = {...onlinePeople};
@@ -68,6 +74,14 @@ export default function Chat(){
                     {!selectedUserId && (
                         <div className="flex h-full flex-grow items-center justify-center">
                             <div className="text-gray-300"> &larr; no selected person</div>
+                        </div>
+                    )}
+                    {!!selectedUserId &&(
+                        <div>
+                            {messages.map(message =>(
+                                <div>{message.text}</div>
+                            ))}
+
                         </div>
                     )}
                 </div>
