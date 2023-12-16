@@ -4,6 +4,7 @@ import Avatar from "./Avatar";
 import Logo from "./logo";
 import { UserContext } from "./assets/UserContext";
 import uniqBy from "lodash/uniqBy";
+import axios from "axios"
 
 
 export default function Chat(){
@@ -63,7 +64,7 @@ export default function Chat(){
 
     useEffect(() => {
         if (selectedUserId){
-            // axios.get('/messages/'+selectedUserId).then()
+            axios.get('/messages/'+selectedUserId).then()
         }
     },[selectedUserId])
 

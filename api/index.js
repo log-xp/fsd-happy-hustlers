@@ -27,12 +27,18 @@ app.use(cors({
     origin: "http://localhost:5173",
 }));
 
+function getUserDataFromRequest(req){
+  
+}
+
 app.get('/test',(req,res) => {
     res.json('test ok')
 });
 
 app.get('/messages/:userId', (req,res) => {
-  
+  const {userId} = req.params;
+
+
 })
 
 app.get('/profile',(req,res) => {
