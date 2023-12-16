@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User')
+const Message = require('./models/Message')
 const ws = require('ws');
 
 
@@ -29,6 +30,10 @@ app.use(cors({
 app.get('/test',(req,res) => {
     res.json('test ok')
 });
+
+app.get('/messages/:userId', (req,res) => {
+  
+})
 
 app.get('/profile',(req,res) => {
   const token = req.cookies?.token ;
@@ -105,16 +110,29 @@ wss.on('connection',(connection,req) => {
     }
   }
 
-  connection.on('message',(message,isBinary) => {
+  connection.on('message', async (message) => {
     const messageData = JSON.parse(message.toString());
     const {recipient , text} = messageData;
     if (recipient && text ){
+        const messageDoc = await Message.create({
+          sender:connection.userId,
+          recipient,
+          text,
+        });
+
       [...wss.clients]
         .filter(c => c.userId === recipient)
-        .forEach(c => c.send(JSON.stringify({text,sender:connection.userId})));
+        .forEach(c => c.send(JSON.stringify({
+          text,
+          sender:connection.userId,
+          recipient,
+          id:messageDoc._id,
+        })));
 
-    }
-  });
+      }
+
+
+    });
   
   // notify everyone about online people (when someone connects)
   [...wss.clients].forEach(client => {
