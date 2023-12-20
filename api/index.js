@@ -126,29 +126,36 @@ app.post('/logout',(req,res) => {
 // });
 
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, userType, fullName, favSubject, examScore, areaOfExpertise, collegeGPA } = req.body;
 
   try {
-      const createdUser = await User.create({
-          username: username,
-          password: bcrypt.hashSync(password, bcryptSalt)
-      });
+    const createdUser = await User.create({
+      username: username,
+      password: bcrypt.hashSync(password, bcryptSalt),
+      userType: userType,
+      fullName: fullName,
+      favSubject: userType === 'student' ? favSubject : undefined,
+      examScore: userType === 'student' ? examScore : undefined,
+      areaOfExpertise: userType === 'guide' ? areaOfExpertise : undefined,
+      collegeGPA: userType === 'guide' ? collegeGPA : undefined,
+    });
 
-      jwt.sign({ userId: createdUser._id, username }, jwtSecret, {}, (err, token) => {
-          if (err) throw err;
-          res.cookie('token', token, { sameSite: 'none', secure: true }).status(201).json({
-              id: createdUser._id,
-          });
+    jwt.sign({ userId: createdUser._id, username }, jwtSecret, {}, (err, token) => {
+      if (err) throw err;
+      res.cookie('token', token, { sameSite: 'none', secure: true }).status(201).json({
+        id: createdUser._id,
       });
+    });
   } catch (err) {
-      if (err instanceof MongoServerError && err.code === 11000) {
-          res.status(400).json({ message: 'Username already exists. Please log in instead.' });
-      } else {
-          res.status(500).json('error');
-      }
+    if (err instanceof MongoServerError && err.code === 11000) {
+      res.status(400).json({ message: 'Username already exists. Please log in instead.' });
+    } else {
+      console.error(err);
+      console.error(err.message);
+      res.status(500).json('error');
+    }
   }
 });
-
 const server = app.listen(4040);
 
 
