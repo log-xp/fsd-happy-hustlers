@@ -11,13 +11,20 @@ export default function RegisterAndLoginForm(){
     async function handleSubmit(ev){
         ev.preventDefault();
         const url = isLoginOrRegister === 'register' ? '/register' : '/login';
-        //registering the user
-        const {data} = await axios.post(url,{username,password});
-        // create context to hold currently logged in user
-        setLoggedInUsername(username);
-        setId(data.id);
+        try {
+            const {data} = await axios.post(url,{username,password});
+            setLoggedInUsername(username);
+            setId(data.id);
+        } catch (err) {
+            if (err.response && err.response.status === 400) {
+                // Notify the user that the username already exists
+                alert(err.response.data.message);
+            } else {
+                // Handle other errors
+                console.error(err);
+            }
+        }
     }
-
     
 return(
     <div className="bg-blue-50 h-screen flex items-center ">

@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs');
 const User = require('./models/User')
 const Message = require('./models/Message')
 const ws = require('ws');
+const { MongoServerError } = require('mongodb');
 
 
 dotenv.config();
@@ -102,28 +103,51 @@ app.post('/logout',(req,res) => {
   res.cookie('token','',{sameSite:'none',secure:true}).json('ok');
 });
 
-app.post('/register',async (req,res) => {
-    const {username,password} = req.body;
+// app.post('/register',async (req,res) => {
+//     const {username,password} = req.body;
 
-    try{
+//     try{
+//       const createdUser = await User.create({
+//         username:username,
+//         password:bcrypt.hashSync(password,bcryptSalt)
+//       });
+//       jwt.sign({userId:createdUser._id,username},jwtSecret, {} ,(err, token)=>{
+//         if (err) throw err;
+//         res.cookie('token',token,{sameSite:'none',secure:true}).status(201).json({
+//           id : createdUser._id ,
+//         });
+//     });
+//     } catch (err) {
+//       if (err) throw err;  
+//       res.status(500).json('error');
+//     }
+    
+    
+// });
+
+app.post('/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
       const createdUser = await User.create({
-        username:username,
-        password:bcrypt.hashSync(password,bcryptSalt)
+          username: username,
+          password: bcrypt.hashSync(password, bcryptSalt)
       });
-      jwt.sign({userId:createdUser._id,username},jwtSecret, {} ,(err, token)=>{
-        if (err) throw err;
-        res.cookie('token',token,{sameSite:'none',secure:true}).status(201).json({
-          id : createdUser._id ,
-        });
-    });
-    } catch (err) {
-      if (err) throw err;  
-      res.status(500).json('error');
-    }
-    
-    
-});
 
+      jwt.sign({ userId: createdUser._id, username }, jwtSecret, {}, (err, token) => {
+          if (err) throw err;
+          res.cookie('token', token, { sameSite: 'none', secure: true }).status(201).json({
+              id: createdUser._id,
+          });
+      });
+  } catch (err) {
+      if (err instanceof MongoServerError && err.code === 11000) {
+          res.status(400).json({ message: 'Username already exists. Please log in instead.' });
+      } else {
+          res.status(500).json('error');
+      }
+  }
+});
 
 const server = app.listen(4040);
 
