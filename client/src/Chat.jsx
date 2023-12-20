@@ -129,7 +129,7 @@ export default function Chat(){
                 
                 <div className="p-2 text-center flex items-center">
                     <span className="mr-2 text-sm text-gray-600 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" dataSlot="icon" className="w-4 h-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" data-slot="icon" className="w-4 h-4">
                         <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
                         </svg>
                         {username}
@@ -149,7 +149,7 @@ export default function Chat(){
                         <div className="relative h-full ">
                         <div className="overflow-y-scroll absolute top-0 left-0 right-0 bottom-2">
                             {messagesWithoutDupes.map(message =>(
-                            <div keys={message._id} className={(message.sender === id ? 'text-right':'text-left')}>
+                            <div key={message._id} className={(message.sender === id ? 'text-right':'text-left')}>
                                 <div className={"text-left inline-block p-2 my-2 rounded-md text-sm " +(message.sender === id ? 'bg-blue-500 text-white':'bg-white text-grey-500')}>
                                         {message.text}
                                     </div>
