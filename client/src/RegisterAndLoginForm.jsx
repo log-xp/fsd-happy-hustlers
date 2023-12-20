@@ -63,53 +63,55 @@ export default function RegisterAndLoginForm(){
                 {/* Additional Fields for Registration */}
                 {isLoginOrRegister === 'register' && (
                     <>
-                        <input value={fullName}
-                            onChange={ev => setFullName(ev.target.value)}
-                            type="text" placeholder="Full Name" 
-                            className="block w-full rounded-sm p-2 mb-2  border" required />
+                        <div>
+                            <input value={fullName}
+                                onChange={ev => setFullName(ev.target.value)}
+                                type="text" placeholder="Full Name" 
+                                className="block w-full rounded-sm p-2 mb-2  border" required />
 
-                        <select value={userType}
-                            onChange={ev => setUserType(ev.target.value)}
-                            className="block w-full rounded-sm p-2 mb-2  border" required>
-                            <option value="">Select User Type</option>
-                            <option value="Student">Student</option>
-                            <option value="Guide">Guide</option>
-                        </select>
+                            <select value={userType}
+                                onChange={ev => setUserType(ev.target.value)}
+                                className="block w-full rounded-sm p-2 mb-2  border" required>
+                                <option value="">Select User Type</option>
+                                <option value="Student">Student</option>
+                                <option value="Guide">Guide</option>
+                            </select>
 
-                        {userType === 'Student' && (
-                            <>
-                                <input value={score}
-                                    onChange={ev => setScore(ev.target.value)}
-                                    type="text" placeholder="Score"
-                                    className="block w-full rounded-sm p-2 mb-2  border" required />
+                            {userType === 'Student' && (
+                                <>
+                                    <input value={score}
+                                        onChange={ev => setScore(ev.target.value)}
+                                        type="text" placeholder="Score"
+                                        className="block w-full rounded-sm p-2 mb-2  border" required />
 
-                                <input value={favSubject}
-                                    onChange={ev => setFavSubject(ev.target.value)}
-                                    type="text" placeholder="Favorite Subject"
-                                    className="block w-full rounded-sm p-2 mb-2  border" required />
-                            </>
-                        )}
+                                    <input value={favSubject}
+                                        onChange={ev => setFavSubject(ev.target.value)}
+                                        type="text" placeholder="Favorite Subject"
+                                        className="block w-full rounded-sm p-2 mb-2  border" required />
+                                </>
+                            )}
 
-                        {userType === 'Guide' && (
-                            <>
-                                <input value={collegeGPA}
-                                    onChange={ev => setCollegeGPA(ev.target.value)}
-                                    type="text" placeholder="College GPA"
-                                    className="block w-full rounded-sm p-2 mb-2  border" required />
+                            {userType === 'Guide' && (
+                                <>
+                                    <input value={collegeGPA}
+                                        onChange={ev => setCollegeGPA(ev.target.value)}
+                                        type="text" placeholder="College GPA"
+                                        className="block w-full rounded-sm p-2 mb-2  border" required />
 
-                                <input value={expertise}
-                                    onChange={ev => setExpertise(ev.target.value)}
-                                    type="text" placeholder="Expertise"
-                                    className="block w-full rounded-sm p-2 mb-2  border" required />
-                            </>
-                        )}
+                                    <input value={expertise}
+                                        onChange={ev => setExpertise(ev.target.value)}
+                                        type="text" placeholder="Expertise"
+                                        className="block w-full rounded-sm p-2 mb-2  border" required />
+                                </>
+                            )}
+                        </div>
+                        <div>
+                            Already a member? 
+                            <button className="ml-1" onClick={() => setLoginOrRegister('login')}>
+                                Login here 
+                            </button>
+                        </div>
                     </>
-                    <div>
-                        Already a member? 
-                        <button className="ml-1" onClick={() => setLoginOrRegister('login')}>
-                            Login here 
-                        </button>
-                    </div>
                 )}
                 {isLoginOrRegister === 'login' && (
                     <div>
