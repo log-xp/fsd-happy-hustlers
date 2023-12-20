@@ -52,11 +52,13 @@ export default function Chat(){
         })
     }
 
-    function sendMessage(ev) {
-        ev.preventDefault();
+    function sendMessage(ev,file = null) {
+
+        if(ev) ev.preventDefault();
         ws.send(JSON.stringify({
             recipient : selectedUserId ,
             text : newMessageText ,
+            file,
         }));
 
         setNewMessageText('');
@@ -66,8 +68,24 @@ export default function Chat(){
             recipient:selectedUserId,
             _id:Date.now(),
         }]));
+        if(file){
+            axios.get('/messages/'+selectedUserId).then(res => {
+                setMessages(res.data);
+            });
+        }
 
     } 
+
+    function sendFile(ev){
+        const reader = new FileReader();
+        reader.readAsDataURL(ev.target.files[0]);
+        reader.onload = () => {
+            sendMessage(null, {
+                name: ev.target.files[0].name,
+                data: reader.result
+            });
+        }
+    }
 
     useEffect(() => {
         const div = divUnderMessages.current;
@@ -152,6 +170,16 @@ export default function Chat(){
                             <div key={message._id} className={(message.sender === id ? 'text-right':'text-left')}>
                                 <div className={"text-left inline-block p-2 my-2 rounded-md text-sm " +(message.sender === id ? 'bg-blue-500 text-white':'bg-white text-grey-500')}>
                                         {message.text}
+                                        {message.file && (
+                                            <div className="flex items-center gap-1">
+                                                <a target="_blank" className="flex items-center underline" href={axios.defaults.baseURL + '/uploads/' + message.file}>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
+                                                    </svg>
+                                                    {message.file}
+                                                </a>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))}
@@ -168,6 +196,12 @@ export default function Chat(){
                             onChange={ev => setNewMessageText(ev.target.value)}
                             placeholder="Type your message here" 
                             className="bg-white flex-grow border rounded-sm p-2"/>
+                    <label className="bg-blue-300 p-2 text-blue-500 cursor-pointer rounded-sm">
+                        <input type="file"  className="hidden" onChange={sendFile}/>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m18.375 12.739-7.693 7.693a4.5 4.5 0 0 1-6.364-6.364l10.94-10.94A3 3 0 1 1 19.5 7.372L8.552 18.32m.009-.01-.01.01m5.699-9.941-7.81 7.81a1.5 1.5 0 0 0 2.112 2.13" />
+                        </svg>
+                    </label>
                     <button type='submit' className="bg-blue-500 p-2 text-white rounded-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
