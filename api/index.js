@@ -73,7 +73,7 @@ app.get('/people',async (req,res) => {
 // Get user profile data from the server  
 app.get('/users_unac', async (req, res) => {
   try {
-    const unac_students = await User.find({userType : "Student"});
+    const unac_students = await User.find({hasJoinedGroup : false, userType : "Student"});
     const unac_mentors = await User.find({userType : "Guide"});
 
     res.json([...unac_students, ...unac_mentors]);
@@ -94,6 +94,17 @@ app.get('/profile',(req,res) => {
     });
   } else {
     res.status(401).json('no token');
+  }
+});
+
+app.post('/updateStudentsGroupStatus', async (req, res) => {
+  const { studentIds } = req.body;
+  try {
+    await User.updateMany({ _id: { $in: studentIds } }, { $set: { hasJoinedGroup: true } });
+    res.status(200).json({ message: 'Students updated successfully.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

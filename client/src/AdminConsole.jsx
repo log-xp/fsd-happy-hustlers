@@ -40,7 +40,20 @@ const AdminConsole = () => {
   };
 
   const handleButtonClick = () => {
+    const selectedStudentIds = selectedStudents.map(student => student._id);
+
+  // Call the backend endpoint to update students' hasJoinedGroup field
+  axios.post('/updateStudentsGroupStatus', { studentIds: selectedStudentIds })
+    .then(response => {
+      console.log(response.data); // Log success message
+      // Perform other actions if needed
+    })
+    .catch(error => {
+      console.error(error); // Handle errors
+      // Show an error message or perform other actions
+    });
     // Log the selected students and mentors to the console
+
     console.log('Selected Students:', selectedStudents);
     console.log('Selected Mentors:', selectedMentors);
     // You can perform other actions with the selected items here
@@ -82,6 +95,8 @@ const AdminConsole = () => {
         ))}
       </ul>
 
+      <input type="text" className='bg-blue-200 py-2 mr-1 rounded-sm text-center' placeholder='Enter Group name' />
+      
       <button
         onClick={handleButtonClick}
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
