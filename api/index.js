@@ -68,21 +68,32 @@ app.get('/messages/:userId', async (req,res) => {
 app.get('/people',async (req,res) => {
   const users = await User.find({},{'_id':1,username:1}) ;
   res.json(users);
+});
 
+// Get user profile data from the server  
+app.get('/users_unac', async (req, res) => {
+  try {
+    const unac_students = await User.find({userType : "Student"});
+    const unac_mentors = await User.find({userType : "Guide"});
 
+    res.json([...unac_students, ...unac_mentors]);
+  } catch (error) {
+    // Handle any errors here
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 app.get('/profile',(req,res) => {
   const token = req.cookies?.token ;
 
   if (token){ 
-  jwt.verify(token,jwtSecret,{} ,(err , userData)=>{
-    if (err) throw err;
-    res.json(userData);
-
+    jwt.verify(token,jwtSecret,{} ,(err , userData)=>{
+      if (err) throw err;
+      res.json(userData);
     });
   } else {
-    res.status(401).json('no token')
+    res.status(401).json('no token');
   }
 });
 
