@@ -100,6 +100,18 @@ const AdminConsole = () => {
     });
   }, []);
 
+  const logout = () => {
+    axios.post('/logout').then(() => {
+      setWs(null);
+      setId(null);
+      setUsername(null);
+  })
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+  };
+
   const handleCheckboxChange = (event, type, user) => {
     const selectedId = user._id;
 
