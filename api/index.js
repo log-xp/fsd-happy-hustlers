@@ -128,13 +128,26 @@ app.post('/logout',(req,res) => {
 // });
 
 app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, fullName, userType, score, favSubject, collegeGPA, expertise } = req.body;
 
   try {
-      const createdUser = await User.create({
+      let newUser = {
           username: username,
-          password: bcrypt.hashSync(password, bcryptSalt)
-      });
+          password: bcrypt.hashSync(password, bcryptSalt),
+          fullName: fullName,
+          userType: userType
+      };
+
+      // Add fields based on user type
+      if (userType === 'Student') {
+          newUser.score = score;
+          newUser.favSubject = favSubject;
+      } else if (userType === 'Guide') {
+          newUser.collegeGPA = collegeGPA;
+          newUser.expertise = expertise;
+      }
+
+      const createdUser = await User.create(newUser);
 
       jwt.sign({ userId: createdUser._id, username }, jwtSecret, {}, (err, token) => {
           if (err) throw err;

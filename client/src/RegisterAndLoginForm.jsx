@@ -4,46 +4,106 @@ import { UserContext } from "./assets/UserContext";
 
 export default function RegisterAndLoginForm(){
     const [username , setUsername ] = useState('');
-    const [password,setPassword] = useState('');
+    const [password, setPassword] = useState('');
     const [isLoginOrRegister, setLoginOrRegister] = useState('login');
-    const {setUsername:setLoggedInUsername,setId} = useContext(UserContext);
+    const {setUsername: setLoggedInUsername, setId} = useContext(UserContext);
+    const [fullName, setFullName] = useState('');
+    const [userType, setUserType] = useState('');
+    const [score, setScore] = useState(''); // for students
+    const [favSubject, setFavSubject] = useState(''); // for students
+    const [collegeGPA, setCollegeGPA] = useState(''); // for guides
+    const [expertise, setExpertise] = useState(''); // for guides
 
     async function handleSubmit(ev){
         ev.preventDefault();
+        const userData = {
+            username,
+            password,
+            fullName,
+            userType
+        };
+        if (userType === 'Student') {
+            userData.score = score;
+            userData.favSubject = favSubject;
+        } else if (userType === 'Guide') {
+            userData.collegeGPA = collegeGPA;
+            userData.expertise = expertise;
+        }
+
         const url = isLoginOrRegister === 'register' ? '/register' : '/login';
         try {
-            const {data} = await axios.post(url,{username,password});
+            const {data} = await axios.post(url, userData);
             setLoggedInUsername(username);
             setId(data.id);
-        } catch (err) {
-            if (err.response && err.response.status === 400) {
-                // Notify the user that the username already exists
-                alert(err.response.data.message);
+            if (isLoginOrRegister === 'register') {
+                history.push(`/register/${userType}`);
             } else {
-                // Handle other errors
-                console.error(err);
+                history.push('/chat');
             }
+        } catch (err) {
+            // Handle errors
         }
     }
-    
-return(
-    <div className="bg-blue-50 h-screen flex items-center ">
-        <form className="w-64 mx-auto mb-12" onSubmit={handleSubmit}>
-            <input value={username}
-                onChange={ev => setUsername(ev.target.value)}
-                type="text" placeholder="username" 
-                className="block w-full rounded-sm p-2 mb-2  border"/>
-            
-            <input value={password}
-                onChange={ev => setPassword(ev.target.value)}
-                type="password" 
-                placeholder="password" 
-                className="block w-full rounded-sm p-2 mb-2  border"/>
-            <button className="bg-blue-500 text-white block w-full rounded-sm p-2">
-                {isLoginOrRegister === 'register' ? 'Register' : 'Login'}
-            </button>
-            <div className="text-center mt-2">
+
+    return (
+        <div className="bg-blue-50 h-screen flex items-center ">
+            <form className="w-64 mx-auto mb-12" onSubmit={handleSubmit}>
+                {/* Common Fields */}
+                <input value={username}
+                    onChange={ev => setUsername(ev.target.value)}
+                    type="text" placeholder="username" 
+                    className="block w-full rounded-sm p-2 mb-2  border"/>
+                
+                <input value={password}
+                    onChange={ev => setPassword(ev.target.value)}
+                    type="password" 
+                    placeholder="password" 
+                    className="block w-full rounded-sm p-2 mb-2  border"/>
+
+                {/* Additional Fields for Registration */}
                 {isLoginOrRegister === 'register' && (
+                    <>
+                        <input value={fullName}
+                            onChange={ev => setFullName(ev.target.value)}
+                            type="text" placeholder="Full Name" 
+                            className="block w-full rounded-sm p-2 mb-2  border" required />
+
+                        <select value={userType}
+                            onChange={ev => setUserType(ev.target.value)}
+                            className="block w-full rounded-sm p-2 mb-2  border" required>
+                            <option value="">Select User Type</option>
+                            <option value="Student">Student</option>
+                            <option value="Guide">Guide</option>
+                        </select>
+
+                        {userType === 'Student' && (
+                            <>
+                                <input value={score}
+                                    onChange={ev => setScore(ev.target.value)}
+                                    type="text" placeholder="Score"
+                                    className="block w-full rounded-sm p-2 mb-2  border" required />
+
+                                <input value={favSubject}
+                                    onChange={ev => setFavSubject(ev.target.value)}
+                                    type="text" placeholder="Favorite Subject"
+                                    className="block w-full rounded-sm p-2 mb-2  border" required />
+                            </>
+                        )}
+
+                        {userType === 'Guide' && (
+                            <>
+                                <input value={collegeGPA}
+                                    onChange={ev => setCollegeGPA(ev.target.value)}
+                                    type="text" placeholder="College GPA"
+                                    className="block w-full rounded-sm p-2 mb-2  border" required />
+
+                                <input value={expertise}
+                                    onChange={ev => setExpertise(ev.target.value)}
+                                    type="text" placeholder="Expertise"
+                                    className="block w-full rounded-sm p-2 mb-2  border" required />
+                            </>
+                        )}
+                    </>
                     <div>
                         Already a member? 
                         <button className="ml-1" onClick={() => setLoginOrRegister('login')}>
@@ -59,9 +119,29 @@ return(
                         </button>
                     </div>
                 )}
-                
-            </div>           
-        </form>
-    </div>
+
+                {/* Submit Button and Toggle Link */}
+                <button className="bg-blue-500 text-white block w-full rounded-sm p-2">
+                    {isLoginOrRegister === 'register' ? 'Register' : 'Login'}
+                </button>
+                <div className="text-center mt-2">
+                    {isLoginOrRegister === 'register' ? (
+                        <div>
+                            Already a member? 
+                            <button onClick={() => setLoginOrRegister('login')}>
+                                Login here 
+                            </button>
+                        </div>
+                    ) : (
+                        <div>
+                            Not a member yet? 
+                            <button onClick={() => setLoginOrRegister('register')}>
+                                Register here 
+                            </button>
+                        </div>
+                    )}
+                </div>           
+            </form>
+        </div>
     );
 }
