@@ -46,7 +46,7 @@ return(
                 {isLoginOrRegister === 'register' && (
                     <div>
                         Already a member? 
-                        <button onClick={() => setLoginOrRegister('login')}>
+                        <button className="ml-1" onClick={() => setLoginOrRegister('login')}>
                             Login here 
                         </button>
                     </div>
@@ -54,7 +54,7 @@ return(
                 {isLoginOrRegister === 'login' && (
                     <div>
                         Not a member yet? 
-                        <button onClick={() => setLoginOrRegister('register')}>
+                        <button className="ml-1" onClick={() => setLoginOrRegister('register')}>
                             Register here 
                         </button>
                     </div>
