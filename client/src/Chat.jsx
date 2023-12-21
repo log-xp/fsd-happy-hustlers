@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useState ,useContext , useRef } from "react";
 import Logo from "./logo";
 import { UserContext } from "./assets/UserContext";
-import GroupChat from './GroupChat';
 import uniqBy from "lodash/uniqBy";
 import axios from "axios"
 import Contact from "./Contact";
@@ -14,9 +13,6 @@ export default function Chat(){
     const [offlinePeople, setOfflinePeople] = useState({});
     const [selectedUserId,setSelectedUserId] = useState(null);
     const [newMessageText,setNewMessageText] = useState('');
-    const [groups, setGroups] = useState({}); // State for groups
-    const [selectedGroupId, setSelectedGroupId] = useState(null); // State for selected group chat
-
     const [messages,setMessages] = useState([]);
     const {username,id, setId, setUsername} = useContext(UserContext)
     const divUnderMessages = useRef();
@@ -78,6 +74,7 @@ export default function Chat(){
                 _id:Date.now(),
             }]));
         }
+
     } 
 
     function sendFile(ev){
@@ -108,19 +105,8 @@ export default function Chat(){
                 offlinePeople[p._id] = p;
             })
             setOfflinePeople(offlinePeople);
-        });
+        })
     }, [onlinePeople]);
-
-    useEffect(() => {
-        // Fetch groups from the backend when the component mounts
-        axios.get('/groups')
-          .then(response => {
-            setGroups(response.data.groups);
-          })
-          .catch(error => {
-            console.error('Error fetching groups:', error);
-          });
-      }, []);
 
     useEffect(() => {
         if (selectedUserId){
@@ -149,16 +135,6 @@ export default function Chat(){
                     onClick={() => setSelectedUserId(userId)}
                     selected = {userId === selectedUserId} />
                 ))}
-
-                {Array.isArray(groups) && groups.map((group) => (
-                <GroupChat 
-                    key={group.id} 
-                    {...group} 
-                    onClick={setSelectedGroupId} 
-                    selected={selectedGroupId === group.id} 
-                />
-                ))}
-
                 {Object.keys(offlinePeople).map(userId => (
                     <Contact
                     key = {userId} 

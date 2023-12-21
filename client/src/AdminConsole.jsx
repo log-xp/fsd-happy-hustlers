@@ -1,10 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { UserContext } from './assets/UserContext';
-
 
 const AdminConsole = () => {
-  const [ws,setWs] = useState(null);
   const [students, setStudents] = useState([]);
   const [mentors, setMentors] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -43,18 +40,6 @@ const AdminConsole = () => {
         }
       });
     }
-  };
-
-  const logout = () => {
-    axios.post('/logout').then(() => {
-      setWs(null);
-      setId(null);
-      setUsername(null);
-  })
-  
-    setTimeout(() => {
-      window.location.reload();
-    }, 100);
   };
 
   const handleButtonClick = () => {
@@ -123,13 +108,27 @@ const AdminConsole = () => {
       
       <button
         onClick={handleButtonClick}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 ml-1 mr-2"
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
       >
-        Create Group
+        Submit
       </button>
 
-      <button className='bg-gray-300 py-2 px-2 rounded-sm' onClick={logout}>Logout</button>
+      {/* Display selected items on the webpage */}
+      {/* <div className="mt-4">
+        <h3 className="text-xl font-bold mb-2">Selected Students</h3>
+        <ul>
+          {selectedStudents.map((student) => (
+            <li key={student._id}>{student.fullName}</li>
+          ))}
+        </ul>
 
+        <h3 className="text-xl font-bold mt-4 mb-2">Selected Mentors</h3>
+        <ul>
+          {selectedMentors.map((mentor) => (
+            <li key={mentor._id}>{mentor.fullName}</li>
+          ))}
+        </ul>
+      </div> */}
     </div>
   );
 };
