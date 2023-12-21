@@ -10,7 +10,7 @@ const Message = require('./models/Message')
 const ws = require('ws');
 const { MongoServerError } = require('mongodb');
 const fs = require('fs');
-const Group = require('./models/Group');
+
 
 dotenv.config();
 mongoose.connect(process.env.MONGO_URL)
@@ -53,26 +53,6 @@ async function getUserDataFromRequest(req){
     }
   });
 }  
-
-async function findUserGroups(userId) {
-  try {
-      // Assuming 'groups' is a field in your User model referencing Group IDs
-      const user = await User.findById(userId).populate('groups').exec();
-      return user.groups;
-  } catch (error) {
-      console.error('Error finding user groups:', error);
-      throw error;
-  }
-}
-
-app.get('/user-groups', async (req, res) => {
-  const userData = await getUserDataFromRequest(req);
-  const userId = userData.userId;
-
-  findUserGroups(userId)
-      .then(groups => res.json(groups))
-      .catch(error => res.status(500).send(error));
-});
 
 app.get('/messages/:userId', async (req,res) => {
   const {userId} = req.params;

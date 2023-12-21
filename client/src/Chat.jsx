@@ -12,7 +12,6 @@ export default function Chat(){
     const [onlinePeople, setOnlinePeople] = useState({});
     const [offlinePeople, setOfflinePeople] = useState({});
     const [selectedUserId,setSelectedUserId] = useState(null);
-    const [selectedGroupId, setSelectedGroupId] = useState(null);
     const [newMessageText,setNewMessageText] = useState('');
     const [messages,setMessages] = useState([]);
     const {username,id, setId, setUsername} = useContext(UserContext)
@@ -127,15 +126,6 @@ export default function Chat(){
             <div className="bg-white w-1/3 flex flex-col">
                 <div className="flex-grow">
                     <Logo/>
-                    {groupList.map(group => (
-                    <GroupChat
-                        key={group.id}
-                        groupId={group.id}
-                        groupName={group.name}
-                        onClick={() => setSelectedGroup(group.id)}
-                        selected={group.id === selectedGroupId}
-                    />
-                ))}
                 {Object.keys(onlinePeopleExclOurUser).map(userId => (
                     <Contact
                     key = {userId} 
