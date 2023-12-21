@@ -38,7 +38,11 @@ export default function RegisterAndLoginForm(){
             if (isLoginOrRegister === 'register') {
                 history.push(`/register/${userType}`);
             } else {
-                history.push('/chat');
+                if (data.isAdmin) {
+                    history.push('/AdminConsole');
+                } else {
+                    history.push('/chat');
+                }
             }
         } catch (err) {
             // Handle errors

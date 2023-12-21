@@ -7,6 +7,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User')
 const Message = require('./models/Message')
+const Group = require('./models/Group')
 const ws = require('ws');
 const { MongoServerError } = require('mongodb');
 const fs = require('fs');
@@ -68,31 +69,87 @@ app.get('/messages/:userId', async (req,res) => {
 app.get('/people',async (req,res) => {
   const users = await User.find({},{'_id':1,username:1}) ;
   res.json(users);
+});
 
+// Get user profile data from the server  
+app.get('/users_unac', async (req, res) => {
+  try {
+    const unac_students = await User.find({hasJoinedGroup : false, userType : "Student"});
+    const unac_mentors = await User.find({userType : "Guide"});
 
+    res.json([...unac_students, ...unac_mentors]);
+  } catch (error) {
+    // Handle any errors here
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 app.get('/profile',(req,res) => {
   const token = req.cookies?.token ;
 
   if (token){ 
-  jwt.verify(token,jwtSecret,{} ,(err , userData)=>{
-    if (err) throw err;
-    res.json(userData);
-
+    jwt.verify(token,jwtSecret,{} ,(err , userData)=>{
+      if (err) throw err;
+      res.json(userData);
     });
   } else {
-    res.status(401).json('no token')
+    res.status(401).json('no token');
   }
 });
+
+app.post('/updateStudentsGroupStatus', async (req, res) => {
+  const { studentIds, mentorIds, groupName } = req.body;
+
+  try {
+    // Update students' hasJoinedGroup field
+    await User.updateMany(
+      { _id: { $in: studentIds } },
+      { $addToSet: { groups: groupName }, $set: { hasJoinedGroup: true } }
+    );
+
+    // Update mentors' groups field to include groupName
+    await User.updateMany(
+      { _id: { $in: mentorIds } },
+      { $addToSet: { groups: groupName } }
+    );
+
+    // Create or update the Group model
+    const group = await Group.findOne({ name: groupName });
+
+    if (group) {
+      // If the group exists, add users to the existing group
+      await Group.updateOne(
+        { name: groupName },
+        { $addToSet: { users: [...studentIds, ...mentorIds] } }
+      );
+    } else {
+      // If the group doesn't exist, create a new group and add users
+      await Group.create({
+        name: groupName,
+        users: [...studentIds, ...mentorIds],
+        status: 'grouped',
+      });
+    }
+
+    console.log(`Updated groups and created/updated GroupModel with groupName: ${groupName}`);
+
+    res.status(200).json({ message: 'Students and mentors updated successfully.' });
+  } catch (error) {
+    console.error(error);
+    console.log(error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 app.post('/login', async (req, res) => {
   const {username, password} = req.body;
   const foundUser = await User.findOne({username});
-  if (foundUser){
-    const passOk = bcrypt.compareSync(password, foundUser.password)
-    if(passOk){
-      jwt.sign({userId:foundUser._id,username},jwtSecret, {} ,(err, token)=>{
+  if (foundUser) {
+    const passOk = bcrypt.compareSync(password, foundUser.password);
+    if (passOk) {
+      jwt.sign({userId:foundUser._id, username, isAdmin: foundUser.isAdmin}, jwtSecret, {} ,(err, token)=>{
         res.cookie('token',token, {sameSite:'none',secure:true}).json({
           id: foundUser._id,
         });
@@ -100,6 +157,9 @@ app.post('/login', async (req, res) => {
     }
   }
 });
+
+
+
 
 app.post('/logout',(req,res) => {
   res.cookie('token','',{sameSite:'none',secure:true}).json('ok');
