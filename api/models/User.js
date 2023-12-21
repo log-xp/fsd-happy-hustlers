@@ -8,7 +8,8 @@ const UserSchema = new mongoose.Schema({
     score: { type: Number, required: function() { return this.userType === 'Student'; } },
     favSubject: { type: String, required: function() { return this.userType === 'Student'; } },
     collegeGPA: { type: Number, required: function() { return this.userType === 'Guide'; } },
-    expertise: { type: String, required: function() { return this.userType === 'Guide'; } }
+    expertise: { type: String, required: function() { return this.userType === 'Guide'; } },
+    groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }]
 }, { timestamps: true });
 
 const UserModel = mongoose.model('User', UserSchema);

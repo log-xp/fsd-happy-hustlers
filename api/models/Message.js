@@ -4,6 +4,7 @@ const MessageSchema = new mangoose.Schema({
     recipient : {type:mangoose.Schema.Types.ObjectId,ref:'User'},
     text: String,
     file: String,
+    group: { type:mangoose.Schema.Types.ObjectId, ref: 'Group' }
 
 },{timestamps:true});
 
