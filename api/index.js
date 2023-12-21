@@ -71,6 +71,26 @@ app.get('/people',async (req,res) => {
   res.json(users);
 });
 
+app.get('/groups', async (req, res) => {
+  try {
+    // Fetch all users who have the groups field populated
+    const usersWithGroups = await UserModel.find({ groups: { $exists: true, $not: { $size: 0 } } });
+    
+    // Extract all unique groups from these users
+    const groups = usersWithGroups.reduce((allGroups, user) => {
+      allGroups.push(...user.groups);
+      return allGroups;
+    }, []);
+    
+    // Get unique groups (remove duplicates)
+    const uniqueGroups = [...new Set(groups)];
+    
+    res.json({ groups: uniqueGroups });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // Get user profile data from the server  
 app.get('/users_unac', async (req, res) => {
   try {

@@ -125,7 +125,7 @@ const AdminConsole = () => {
         onClick={handleButtonClick}
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 ml-1 mr-2"
       >
-        Submit
+        Create Group
       </button>
 
       <button className='bg-gray-300 py-2 px-2 rounded-sm' onClick={logout}>Logout</button>
