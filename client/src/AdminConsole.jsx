@@ -1,6 +1,86 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { UserContext } from './assets/UserContext';
+import styled from "styled-components";
 
+
+
+
+
+const Container = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0.5)
+    ),
+    url("https://img.freepik.com/premium-photo/texture-craft-white-light-blue-paper-background-half-two-colors-macro-structure-vintage-cerulean-cardboard_113767-5918.jpg?size=626&ext=jpg")
+      center;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Wrapper = styled.div`
+  width: 80%;
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+`;
+
+const Title = styled.h2`
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+`;
+
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  border-radius:10px;
+`;
+
+const TableHeader = styled.th`
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+`;
+
+const TableRow = styled.tr`
+  &:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+`;
+
+const TableCell = styled.td`
+  border: 1px solid #ddd;
+  padding: 8px;
+`;
+
+const TextInput = styled.input`
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-bottom: 10px;
+`;
+
+const SubmitButton = styled.button`
+  width: 40%;
+  border: none;
+  padding: 10px;
+  background-color: teal;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
+`;
+
+const LogoutButton = styled.button`
+  background-color: #ccc;
+  padding: 10px;
+  cursor: pointer;
+`;
 const AdminConsole = () => {
   const [students, setStudents] = useState([]);
   const [mentors, setMentors] = useState([]);
@@ -69,69 +149,76 @@ const AdminConsole = () => {
   
 
   return (
-    
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Students</h2>
-      <ul>
-        {students.map((student) => (
-          <li key={student._id} className="mb-2">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                value={student._id}
-                onChange={(event) => handleCheckboxChange(event, 'Student', student)}
-                className="mr-2"
-              />
-              {student.fullName} - Score: {student.score}, Fav Subject: {student.favSubject}
-            </label>
-          </li>
-        ))}
-      </ul>
+    <Container>
+    <Wrapper>
+      <Title>Students</Title>
+      <Table>
+        <thead>
+          <TableRow>
+            <TableHeader>Select</TableHeader>
+            <TableHeader>Name</TableHeader>
+            <TableHeader>Score</TableHeader>
+            <TableHeader>Fav Subject</TableHeader>
+          </TableRow>
+        </thead>
+        <tbody>
+          {students.map((student) => (
+            <TableRow key={student._id}>
+              <TableCell>
+                <input
+                  type="checkbox"
+                  value={student._id}
+                  onChange={(event) => handleCheckboxChange(event, 'Student', student)}
+                />
+              </TableCell>
+              <TableCell>{student.fullName}</TableCell>
+              <TableCell>{student.score}</TableCell>
+              <TableCell>{student.favSubject}</TableCell>
+            </TableRow>
+          ))}
+        </tbody>
+      </Table>
 
-      <h2 className="text-2xl font-bold my-4">Mentors</h2>
-      <ul>
-        {mentors.map((mentor) => (
-          <li key={mentor._id} className="mb-2">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                value={mentor._id}
-                onChange={(event) => handleCheckboxChange(event, 'Mentor', mentor)}
-                className="mr-2"
-              />
-              {mentor.fullName} - College CGPA: {mentor.collegeGPA}, Expertise: {mentor.expertise}
-            </label>
-          </li>
-        ))}
-      </ul>
+      <Title>Mentors</Title>
+      <Table>
+        <thead>
+          <TableRow>
+            <TableHeader>Select</TableHeader>
+            <TableHeader>Name</TableHeader>
+            <TableHeader>Score</TableHeader>
+            <TableHeader>Expertise</TableHeader>
+          </TableRow>
+        </thead>
+        <tbody>
+          {mentors.map((mentor) => (
+            <TableRow key={mentor._id}>
+              <TableCell>
+                <input
+                  type="checkbox"
+                  value={mentor._id}
+                  onChange={(event) => handleCheckboxChange(event, 'Mentor', mentor)}
+                />
+              </TableCell>
+              <TableCell>{mentor.fullName}</TableCell>
+              <TableCell>{mentor.collegeGPA}</TableCell>
+              <TableCell>{mentor.expertise}</TableCell>
+            </TableRow>
+          ))}
+        </tbody>
+      </Table>
 
-      <input type="text" className='bg-blue-200 py-2 mr-1 rounded-sm text-center' placeholder='Enter Group name' value={groupName} onChange={(e) => setGroupName(e.target.value)}/>
+      <TextInput
+        type="text"
+        placeholder="Enter Group name"
+        value={groupName}
+        onChange={(e) => setGroupName(e.target.value)}
+      />
       
-      <button
-        onClick={handleButtonClick}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-      >
-        Submit
-      </button>
+      <SubmitButton onClick={handleButtonClick}>Submit</SubmitButton>
 
-      {/* Display selected items on the webpage */}
-      {/* <div className="mt-4">
-        <h3 className="text-xl font-bold mb-2">Selected Students</h3>
-        <ul>
-          {selectedStudents.map((student) => (
-            <li key={student._id}>{student.fullName}</li>
-          ))}
-        </ul>
-
-        <h3 className="text-xl font-bold mt-4 mb-2">Selected Mentors</h3>
-        <ul>
-          {selectedMentors.map((mentor) => (
-            <li key={mentor._id}>{mentor.fullName}</li>
-          ))}
-        </ul>
-      </div> */}
-    </div>
-    
+      <LogoutButton onClick={logout}>Logout</LogoutButton>
+    </Wrapper>
+  </Container>
   );
 };
 
