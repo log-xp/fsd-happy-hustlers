@@ -21,7 +21,7 @@ export default function Chat(){
     },[]);
 
     function connectToWs() {
-        const ws = new WebSocket('ws://localhost:4040');
+        const ws = new WebSocket('https://mern-chat-video2-2x7o.vercel.apps');
         setWs(ws);
         ws.addEventListener('message',handleMessage);
         ws.addEventListener('close',() => connectToWs());

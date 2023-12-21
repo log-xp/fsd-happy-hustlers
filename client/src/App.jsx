@@ -4,7 +4,7 @@ import Routes from "./Routes";
 
 function App() {
 
-  axios.defaults.baseURL = 'http://localhost:4040';
+  axios.defaults.baseURL = 'https://mern-chat-video2-2x7o.vercel.app';
   axios.defaults.withCredentials = true;
 
   return (
