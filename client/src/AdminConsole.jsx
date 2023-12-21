@@ -67,19 +67,23 @@ const TextInput = styled.input`
 `;
 
 const SubmitButton = styled.button`
-  width: 40%;
+  width: 10%;
   border: none;
   padding: 10px;
   background-color: teal;
   color: white;
   cursor: pointer;
   margin-right: 10px;
+  border-radius: 5px;
 `;
 
 const LogoutButton = styled.button`
-  background-color: #ccc;
+  background-color: white;
+  color:teal;
   padding: 10px;
   cursor: pointer;
+  border: 1px solid teal;
+  border-radius:  5px;
 `;
 const AdminConsole = () => {
   const [students, setStudents] = useState([]);
