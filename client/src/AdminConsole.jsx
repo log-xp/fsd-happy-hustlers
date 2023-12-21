@@ -84,6 +84,7 @@ const AdminConsole = () => {
   
 
   return (
+    
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Students</h2>
       <ul>
@@ -96,7 +97,7 @@ const AdminConsole = () => {
                 onChange={(event) => handleCheckboxChange(event, 'Student', student)}
                 className="mr-2"
               />
-              {student.fullName}
+              {student.fullName} - Score: {student.score}, Fav Subject: {student.favSubject}
             </label>
           </li>
         ))}
@@ -113,7 +114,7 @@ const AdminConsole = () => {
                 onChange={(event) => handleCheckboxChange(event, 'Mentor', mentor)}
                 className="mr-2"
               />
-              {mentor.fullName}
+              {mentor.fullName} - Score: {mentor.collegeGPA}, Fav Subject: {mentor.expertise}
             </label>
           </li>
         ))}
@@ -131,6 +132,7 @@ const AdminConsole = () => {
       <button className='bg-gray-300 py-2 px-2 rounded-sm' onClick={logout}>Logout</button>
 
     </div>
+    
   );
 };
 
