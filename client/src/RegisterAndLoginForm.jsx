@@ -104,6 +104,20 @@ export default function RegisterAndLoginForm(){
                             </>
                         )}
                     </>
+                    <div>
+                        Already a member? 
+                        <button className="ml-1" onClick={() => setLoginOrRegister('login')}>
+                            Login here 
+                        </button>
+                    </div>
+                )}
+                {isLoginOrRegister === 'login' && (
+                    <div>
+                        Not a member yet? 
+                        <button className="ml-1" onClick={() => setLoginOrRegister('register')}>
+                            Register here 
+                        </button>
+                    </div>
                 )}
 
                 {/* Submit Button and Toggle Link */}

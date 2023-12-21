@@ -22,6 +22,7 @@ mongoose.connect(process.env.MONGO_URL)
 
 
 const app= express();
+app.use('/uploads',express.static(__dirname + '/uploads'));
 app.use(express.json());
 app.use(cookieParser())
 app.use(cors({
@@ -221,7 +222,7 @@ wss.on('connection',(connection,req) => {
       const ext = part[part.length - 1];
       filename = Date.now() + "." + ext;
       const path = __dirname + '/uploads/' + filename;
-      const bufferData = Buffer.from(file.data, 'base64');
+      const bufferData = Buffer.from(file.data.split(',')[1], 'base64');
       fs.writeFile(path, bufferData, ()=>{
         console.log('file saved to ' + path)
       });

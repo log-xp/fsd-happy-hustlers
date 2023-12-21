@@ -61,17 +61,18 @@ export default function Chat(){
             file,
         }));
 
-        setNewMessageText('');
-        setMessages( prev => ([...prev,{
-            text: newMessageText,
-            sender:id,
-            recipient:selectedUserId,
-            _id:Date.now(),
-        }]));
         if(file){
             axios.get('/messages/'+selectedUserId).then(res => {
                 setMessages(res.data);
             });
+        }   else{
+            setNewMessageText('');
+            setMessages( prev => ([...prev,{
+                text: newMessageText,
+                sender:id,
+                recipient:selectedUserId,
+                _id:Date.now(),
+            }]));
         }
 
     } 
