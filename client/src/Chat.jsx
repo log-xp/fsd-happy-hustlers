@@ -74,6 +74,7 @@ export default function Chat(){
                 _id:Date.now(),
             }]));
         }
+
     } 
 
     function sendFile(ev){
@@ -134,9 +135,6 @@ export default function Chat(){
                     onClick={() => setSelectedUserId(userId)}
                     selected = {userId === selectedUserId} />
                 ))}
-
-
-                
                 {Object.keys(offlinePeople).map(userId => (
                     <Contact
                     key = {userId} 

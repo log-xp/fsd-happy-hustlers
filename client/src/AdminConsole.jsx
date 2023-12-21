@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { UserContext } from './assets/UserContext';
 import styled from "styled-components";
@@ -82,7 +82,6 @@ const LogoutButton = styled.button`
   cursor: pointer;
 `;
 const AdminConsole = () => {
-  const [ws,setWs] = useState(null);
   const [students, setStudents] = useState([]);
   const [mentors, setMentors] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -121,18 +120,6 @@ const AdminConsole = () => {
         }
       });
     }
-  };
-
-  const logout = () => {
-    axios.post('/logout').then(() => {
-      setWs(null);
-      setId(null);
-      setUsername(null);
-  })
-  
-    setTimeout(() => {
-      window.location.reload();
-    }, 100);
   };
 
   const handleButtonClick = () => {
