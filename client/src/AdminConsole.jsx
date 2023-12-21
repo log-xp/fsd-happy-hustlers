@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export default function AdminConsole() {
+const AdminConsole = () => {
   const [students, setStudents] = useState([]);
   const [mentors, setMentors] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
@@ -17,65 +17,96 @@ export default function AdminConsole() {
     });
   }, []);
 
-  const handleStudentCheckboxChange = (studentId) => {
-    setSelectedStudents((prevSelected) =>
-      prevSelected.includes(studentId)
-        ? prevSelected.filter((id) => id !== studentId)
-        : [...prevSelected, studentId]
-    );
+  const handleCheckboxChange = (event, type, user) => {
+    const selectedId = user._id;
+
+    if (type === 'Student') {
+      setSelectedStudents((prevSelected) => {
+        if (prevSelected.some((student) => student._id === selectedId)) {
+          return prevSelected.filter((student) => student._id !== selectedId);
+        } else {
+          return [...prevSelected, user];
+        }
+      });
+    } else if (type === 'Mentor') {
+      setSelectedMentors((prevSelected) => {
+        if (prevSelected.some((mentor) => mentor._id === selectedId)) {
+          return prevSelected.filter((mentor) => mentor._id !== selectedId);
+        } else {
+          return [...prevSelected, user];
+        }
+      });
+    }
   };
 
-  const handleMentorCheckboxChange = (mentorId) => {
-    setSelectedMentors((prevSelected) =>
-      prevSelected.includes(mentorId)
-        ? prevSelected.filter((id) => id !== mentorId)
-        : [...prevSelected, mentorId]
-    );
-  };
-
-  const handleSubmit = () => {
-    // Handle the submission logic with selectedStudents and selectedMentors
+  const handleButtonClick = () => {
+    // Log the selected students and mentors to the console
     console.log('Selected Students:', selectedStudents);
     console.log('Selected Mentors:', selectedMentors);
-    // Add your logic for submission here
+    // You can perform other actions with the selected items here
   };
 
   return (
-    <div>
-      <h1>Admin Console</h1>
-      <h2>Students:</h2>
-      <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexDirection: 'column' }}>
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl font-bold mb-4">Students</h2>
+      <ul>
         {students.map((student) => (
-          <li key={student.id}>
-            <label>
+          <li key={student._id} className="mb-2">
+            <label className="flex items-center">
               <input
                 type="checkbox"
-                checked={selectedStudents.includes(student.id)}
-                onChange={() => handleStudentCheckboxChange(student.id)}
+                value={student._id}
+                onChange={(event) => handleCheckboxChange(event, 'Student', student)}
+                className="mr-2"
               />
-              {student.username}
+              {student.fullName}
             </label>
           </li>
         ))}
       </ul>
 
-      <h2>Mentors:</h2>
-      <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexDirection: 'column' }}>
+      <h2 className="text-2xl font-bold my-4">Mentors</h2>
+      <ul>
         {mentors.map((mentor) => (
-          <li key={mentor.id}>
-            <label>
+          <li key={mentor._id} className="mb-2">
+            <label className="flex items-center">
               <input
                 type="checkbox"
-                checked={selectedMentors.includes(mentor.id)}
-                onChange={() => handleMentorCheckboxChange(mentor.id)}
+                value={mentor._id}
+                onChange={(event) => handleCheckboxChange(event, 'Mentor', mentor)}
+                className="mr-2"
               />
-              {mentor.username}
+              {mentor.fullName}
             </label>
           </li>
         ))}
       </ul>
 
-      <button onClick={handleSubmit}>Submit</button>
+      <button
+        onClick={handleButtonClick}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+      >
+        Submit
+      </button>
+
+      {/* Display selected items on the webpage */}
+      {/* <div className="mt-4">
+        <h3 className="text-xl font-bold mb-2">Selected Students</h3>
+        <ul>
+          {selectedStudents.map((student) => (
+            <li key={student._id}>{student.fullName}</li>
+          ))}
+        </ul>
+
+        <h3 className="text-xl font-bold mt-4 mb-2">Selected Mentors</h3>
+        <ul>
+          {selectedMentors.map((mentor) => (
+            <li key={mentor._id}>{mentor.fullName}</li>
+          ))}
+        </ul>
+      </div> */}
     </div>
   );
-}
+};
+
+export default AdminConsole;
