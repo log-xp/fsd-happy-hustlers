@@ -9,7 +9,8 @@ const UserSchema = new mongoose.Schema({
     favSubject: { type: String, required: function() { return this.userType === 'Student'; } },
     collegeGPA: { type: Number, required: function() { return this.userType === 'Guide'; } },
     expertise: { type: String, required: function() { return this.userType === 'Guide'; } },
-    groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }]
+    groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
+    hasJoinedGroup: { type: Boolean, default: false }
 }, { timestamps: true });
 
 const UserModel = mongoose.model('User', UserSchema);
