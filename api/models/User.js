@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     collegeGPA: { type: Number, required: function() { return this.userType === 'Guide'; } },
     expertise: { type: String, required: function() { return this.userType === 'Guide'; } },
     isAdmin: {type:Boolean, default: false},
-    groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
+    groups: [String],
     hasJoinedGroup: { type: Boolean, default: false },
 }, { timestamps: true });
 

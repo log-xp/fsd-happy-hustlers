@@ -7,6 +7,7 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const User = require('./models/User')
 const Message = require('./models/Message')
+const Group = require('./models/Group')
 const ws = require('ws');
 const { MongoServerError } = require('mongodb');
 const fs = require('fs');
@@ -98,15 +99,49 @@ app.get('/profile',(req,res) => {
 });
 
 app.post('/updateStudentsGroupStatus', async (req, res) => {
-  const { studentIds } = req.body;
+  const { studentIds, mentorIds, groupName } = req.body;
+
   try {
-    await User.updateMany({ _id: { $in: studentIds } }, { $set: { hasJoinedGroup: true } });
-    res.status(200).json({ message: 'Students updated successfully.' });
+    // Update students' hasJoinedGroup field
+    await User.updateMany(
+      { _id: { $in: studentIds } },
+      { $addToSet: { groups: groupName }, $set: { hasJoinedGroup: true } }
+    );
+
+    // Update mentors' groups field to include groupName
+    await User.updateMany(
+      { _id: { $in: mentorIds } },
+      { $addToSet: { groups: groupName } }
+    );
+
+    // Create or update the Group model
+    const group = await Group.findOne({ name: groupName });
+
+    if (group) {
+      // If the group exists, add users to the existing group
+      await Group.updateOne(
+        { name: groupName },
+        { $addToSet: { users: [...studentIds, ...mentorIds] } }
+      );
+    } else {
+      // If the group doesn't exist, create a new group and add users
+      await Group.create({
+        name: groupName,
+        users: [...studentIds, ...mentorIds],
+        status: 'grouped',
+      });
+    }
+
+    console.log(`Updated groups and created/updated GroupModel with groupName: ${groupName}`);
+
+    res.status(200).json({ message: 'Students and mentors updated successfully.' });
   } catch (error) {
     console.error(error);
+    console.log(error.message);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 app.post('/login', async (req, res) => {
   const {username, password} = req.body;

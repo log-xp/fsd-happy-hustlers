@@ -6,6 +6,9 @@ const AdminConsole = () => {
   const [mentors, setMentors] = useState([]);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [selectedMentors, setSelectedMentors] = useState([]);
+  const [groupName, setGroupName] = useState('');
+  
+
 
   useEffect(() => {
     axios.get('/users_unac').then((response) => {
@@ -41,9 +44,14 @@ const AdminConsole = () => {
 
   const handleButtonClick = () => {
     const selectedStudentIds = selectedStudents.map(student => student._id);
-
-  // Call the backend endpoint to update students' hasJoinedGroup field
-  axios.post('/updateStudentsGroupStatus', { studentIds: selectedStudentIds })
+    const selectedMentorIds = selectedMentors.map(mentor => mentor._id);
+  
+    // Call the backend endpoint to update students' hasJoinedGroup field
+    axios.post('/updateStudentsGroupStatus', {
+      studentIds: selectedStudentIds,
+      mentorIds: selectedMentorIds,
+      groupName,
+    })
     .then(response => {
       console.log(response.data); // Log success message
       // Perform other actions if needed
@@ -52,12 +60,13 @@ const AdminConsole = () => {
       console.error(error); // Handle errors
       // Show an error message or perform other actions
     });
+  
     // Log the selected students and mentors to the console
-
     console.log('Selected Students:', selectedStudents);
     console.log('Selected Mentors:', selectedMentors);
     // You can perform other actions with the selected items here
   };
+  
 
   return (
     <div className="container mx-auto p-4">
@@ -95,7 +104,7 @@ const AdminConsole = () => {
         ))}
       </ul>
 
-      <input type="text" className='bg-blue-200 py-2 mr-1 rounded-sm text-center' placeholder='Enter Group name' />
+      <input type="text" className='bg-blue-200 py-2 mr-1 rounded-sm text-center' placeholder='Enter Group name' value={groupName} onChange={(e) => setGroupName(e.target.value)}/>
       
       <button
         onClick={handleButtonClick}
