@@ -99,7 +99,7 @@ const AdminConsole = () => {
                 onChange={(event) => handleCheckboxChange(event, 'Mentor', mentor)}
                 className="mr-2"
               />
-              {mentor.fullName} - Score: {mentor.collegeGPA}, Fav Subject: {mentor.expertise}
+              {mentor.fullName} - College CGPA: {mentor.collegeGPA}, Expertise: {mentor.expertise}
             </label>
           </li>
         ))}
