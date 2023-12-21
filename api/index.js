@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(cookieParser())
 app.use(cors({
     credentials: true,
-    origin: "https://happyhustlers.vercel.app/",
+    origin: "https://happyhustlers.vercel.app",
 }));
 
 function getUserDataFromRequest(req){
