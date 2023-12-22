@@ -13,6 +13,7 @@ export default function RegisterAndLoginForm(){
     const [favSubject, setFavSubject] = useState(''); // for students
     const [collegeGPA, setCollegeGPA] = useState(''); // for guides
     const [expertise, setExpertise] = useState(''); // for guides
+    const [needsMentor, setNeedsMentor] = useState(false);
 
     async function handleSubmit(ev){
         ev.preventDefault();
@@ -90,6 +91,15 @@ export default function RegisterAndLoginForm(){
                                         </a>
                                     </button>
                                 </div>
+                                <div className="flex">
+                                <label className="w-50">Would like a mentor</label>
+                                <input type="checkbox" 
+                                        checked={needsMentor} 
+                                        onChange={ev => setNeedsMentor(ev.target.checked)} 
+                                        className="block w-10 rounded-sm p-2 mb-2  border" />
+                                </div>
+                                    
+                                    
                                     {/* <Button className="block bg-blue-200 rounded-sm p-2 mb-2 border"><a className="no-underline" href="https://forms.office.com/Pages/ResponsePage.aspx?id=o835AF4H5USqC6ujrdZTnxL-Bo7ImyBIhiqY84ESJ-NUQk85VEo0RlVVRExES0xMN00wTTQwQUQ5Ni4u">Take Assessment</a></Button> */}
                                     <input value={score}
                                         onChange={ev => setScore(ev.target.value)}
