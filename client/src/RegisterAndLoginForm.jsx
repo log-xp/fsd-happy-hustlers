@@ -83,6 +83,14 @@ export default function RegisterAndLoginForm(){
 
                             {userType === 'Student' && (
                                 <>
+                                <div className="text-center mt-2">
+                                    <button className="bg-blue-200 rounded-sm p-2 mb-2 border w-70">
+                                        <a className="no-underline" href="https://forms.office.com/Pages/ResponsePage.aspx?id=o835AF4H5USqC6ujrdZTnxL-Bo7ImyBIhiqY84ESJ-NUQk85VEo0RlVVRExES0xMN00wTTQwQUQ5Ni4u">
+                                            Take Assessment
+                                        </a>
+                                    </button>
+                                </div>
+                                    {/* <Button className="block bg-blue-200 rounded-sm p-2 mb-2 border"><a className="no-underline" href="https://forms.office.com/Pages/ResponsePage.aspx?id=o835AF4H5USqC6ujrdZTnxL-Bo7ImyBIhiqY84ESJ-NUQk85VEo0RlVVRExES0xMN00wTTQwQUQ5Ni4u">Take Assessment</a></Button> */}
                                     <input value={score}
                                         onChange={ev => setScore(ev.target.value)}
                                         type="text" placeholder="Score"
