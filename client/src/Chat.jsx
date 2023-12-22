@@ -173,18 +173,7 @@ export default function Chat(){
                             <div className="text-gray-300"> &larr; no selected person</div>
                         </div>
                     )}
-                    {!!selectedUserId && (
-                    <div>
-                    <button onClick={showUserInfo}>Show User Info</button>
-                    {/* Display user info */}
-                    {userInfo && (
-                        <div>
-                        <p>Username: {userInfo.username}</p>
-                        {/* Add other user info fields */}
-                        </div>
-                    )}
-                    </div>
-                )}
+                    
                     {!!selectedUserId &&(
                         <div className="relative h-full ">
                         <div className="overflow-y-scroll absolute top-0 left-0 right-0 bottom-2">
