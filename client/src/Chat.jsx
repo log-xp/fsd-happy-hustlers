@@ -5,6 +5,7 @@ import { UserContext } from "./assets/UserContext";
 import uniqBy from "lodash/uniqBy";
 import axios from "axios"
 import Contact from "./Contact";
+import UserProfile from "./UserProfile";
 
 
 export default function Chat(){
@@ -50,6 +51,13 @@ export default function Chat(){
             setId(null);
             setUsername(null);
         })
+    }
+
+    function redirectToUserProfile() {
+        return(
+            <UserProfile />
+        )
+        
     }
 
     function sendMessage(ev,file = null) {
@@ -151,7 +159,8 @@ export default function Chat(){
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" data-slot="icon" className="w-4 h-4">
                         <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clipRule="evenodd" />
                         </svg>
-                        {username}
+                        <button onClick={redirectToUserProfile}>{username}</button>
+                        
                     </span>
                     
                     <button onClick={logout} className="text-sm bg-blue-100 py-1 px-2 border rounded-sm text-gray-500">logout</button>
@@ -164,6 +173,18 @@ export default function Chat(){
                             <div className="text-gray-300"> &larr; no selected person</div>
                         </div>
                     )}
+                    {!!selectedUserId && (
+                    <div>
+                    <button onClick={showUserInfo}>Show User Info</button>
+                    {/* Display user info */}
+                    {userInfo && (
+                        <div>
+                        <p>Username: {userInfo.username}</p>
+                        {/* Add other user info fields */}
+                        </div>
+                    )}
+                    </div>
+                )}
                     {!!selectedUserId &&(
                         <div className="relative h-full ">
                         <div className="overflow-y-scroll absolute top-0 left-0 right-0 bottom-2">

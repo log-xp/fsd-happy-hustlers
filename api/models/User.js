@@ -12,6 +12,10 @@ const UserSchema = new mongoose.Schema({
     isAdmin: {type:Boolean, default: false},
     groups: [String],
     hasJoinedGroup: { type: Boolean, default: false },
+    needsMentor: {
+        type: Boolean,
+        default: true
+    }
 }, { timestamps: true });
 
 const UserModel = mongoose.model('User', UserSchema);
